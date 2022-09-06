@@ -6,7 +6,6 @@ kindly create the save directory on the current path
 import cv2 as cv
 import os
 import math
-import natsort
 import argparse
 import sys
 def face_detection_tracker(path_img):
@@ -71,15 +70,25 @@ def face_detection_tracker(path_img):
                 metadata["data"].append(data)                    
             print(metadata)                     
             cv.imshow("img",img)
+<<<<<<< HEAD
             cv.waitKey(0)            
+=======
+            cv.waitKey(0)           
+>>>>>>> tracker_obj
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
 
+<<<<<<< HEAD
         #print("Exception type: ", exception_type)
         #print("File name: ", filename)
         #print("Line number: ", line_number)
+=======
+        print("Exception type: ", exception_type)
+        print("File name: ", filename)
+        print("Line number: ", line_number)
+>>>>>>> tracker_obj
 
 def args_parse():
     parser=argparse.ArgumentParser()
