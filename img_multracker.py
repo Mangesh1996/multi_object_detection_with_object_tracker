@@ -78,13 +78,12 @@ def read_src(path_img):
         tracking_objects={}
         track_id = 0
         for img in sorted(os.listdir(os.path.join(os.getcwd(),path_img)),key=lambda f:int("".join(filter(str.isdigit,f)))):
+            print(img[:-5])
             imgs=cv.imread(os.path.join(os.getcwd(),path_img,img))
-            gray = cv.cvtColor(imgs, cv.COLOR_BGR2GRAY)           
-            with open(os.path.join(os.getcwd(),"..","infer_labels",img[:-5]+".txt"),"r")as cordinate:
+            with open(os.path.join(os.getcwd(),"infer_labels",img[:-5]+".txt"),"r")as cordinate:
                 read=cordinate.readlines()
             for cor in read:                
                 cors=cor.replace("\n"," ").split(" ")
-                object_name=cors[0]
                 x=round(float(cors[4]))
                 y=round(float(cors[5]))
                 w=round(float(cors[6]))
@@ -96,12 +95,9 @@ def read_src(path_img):
             for object_id,pt2 in tracking_objects_copy.items():
                 object_exists=False
                 for pt in center_points_cur_frame_copy:
-
-                    distance=math.hypot(pt2[0]-pt[0],pt[1]-pt[1])
-                    print(distance,"------------------------->")                   
+                    distance=math.hypot(pt2[0]-pt[0],pt[1]-pt[1])              
                     #update Ids position
-                    if distance <60:
-                        
+                    if distance <20:                        
                         tracking_objects[object_id]=pt
                         object_exists=True
                         if pt in center_points_cur_frame:
@@ -114,7 +110,8 @@ def read_src(path_img):
             for pt in center_points_cur_frame:
                 tracking_objects[track_id]=pt
                 track_id +=1    
-            metadata = {"data":[]}        
+            metadata = {"data":[]}    
+            print("object trackig",tracking_objects)    
             for object_id,pt in tracking_objects.items():
                 cv.putText(imgs,str(object_id),(pt[0],pt[1]-7),0,1,(0,0,255),2) 
                 # p1=(int(bbox[0]),int(bbox[1]))
@@ -130,7 +127,7 @@ def read_src(path_img):
                 metadata["data"].append(data)  
                 p1=(int(x),int(y))
                 p2=(int(x)+int(w),int(y)+int(h))
-                cv.rectangle(imgs,p1,p1,(255,0,0),2,1)                  
+                cv.rectangle(imgs,(x,y),(w,h),(255,0,0),2)                  
             print(metadata)                     
             cv.imshow("img",imgs)
             cv.waitKey(0)       
